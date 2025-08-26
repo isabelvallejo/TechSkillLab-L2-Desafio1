@@ -5,9 +5,11 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class PetitionService {
@@ -49,4 +51,22 @@ public class PetitionService {
     }
 
     //TO - DO: Challenge #1
+    public Flux<String> findHighPriority() {
+        int latency = ThreadLocalRandom.current().nextInt(10, 500);
+
+        return dummyFindAll()
+                //Controlar flujo
+                .limitRate(5)
+                //Simular Async con diferentes delays
+                .delayElements(Duration.ofMillis(latency))
+                //busqueda high priority
+                .filter(p -> p.getPriority() != null && p.getPriority() >= 7)
+                .map(  p -> "Petition Id" + p.getPetitionId()
+                        + "  Petition priority = " + p.getPriority()
+                        + "  Petition type = " + p.getType()
+                        + "  Book id = " + p.getBookId()
+                        + "  Petition date = " + p.getSentAt() +
+                        System.lineSeparator())
+                .doOnNext(System.out::println);
+    }
 }
