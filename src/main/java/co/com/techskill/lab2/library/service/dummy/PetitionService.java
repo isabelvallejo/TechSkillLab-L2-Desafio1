@@ -61,12 +61,13 @@ public class PetitionService {
                 .delayElements(Duration.ofMillis(latency))
                 //busqueda high priority
                 .filter(p -> p.getPriority() != null && p.getPriority() >= 7)
-                .map(  p -> "Petition Id" + p.getPetitionId()
-                        + "  Petition priority = " + p.getPriority()
-                        + "  Petition type = " + p.getType()
-                        + "  Book id = " + p.getBookId()
-                        + "  Petition date = " + p.getSentAt() +
-                        System.lineSeparator())
+                .map(  p ->
+                        "\n--- High Priority Petitions ---\n" +
+                                "Petition ID     : " + p.getPetitionId() + "\n" +
+                                "Priority        : " + p.getPriority() + "\n" +
+                                "Type            : " + p.getType() + "\n" +
+                                "Book ID         : " + p.getBookId() + "\n" +
+                                "Sent At         : " + p.getSentAt() + "\n")
                 .doOnNext(System.out::println);
     }
 }
